@@ -1,0 +1,8 @@
+collector:
+  kafka:
+    producer:
+      properties:
+        "bootstrap-servers": localhost:9092
+      topics:
+        sensor-events: telemetry.sensor.v1
+        hub-events: telemetry.hubs.v1
