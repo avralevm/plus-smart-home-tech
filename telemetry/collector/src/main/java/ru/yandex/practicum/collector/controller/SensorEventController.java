@@ -16,7 +16,7 @@ public class SensorEventController {
 
     @PostMapping
     public void collectSensorEvent(@RequestBody @Valid SensorEvent event) {
-        log.info("\n[POST] Body: {} \n", event);
+        log.info("[POST] Body: {}", event);
         service.sendEvent(event);
     }
 }

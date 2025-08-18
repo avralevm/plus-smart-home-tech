@@ -19,7 +19,7 @@ public class HubEventController {
 
     @PostMapping
     public void collectHubEvent(@RequestBody @Valid HubEvent event) {
-        log.info("\n[POST] Body: {} \n", event);
+        log.info("[POST] Body: {}", event);
         service.sendEvent(event);
     }
 }

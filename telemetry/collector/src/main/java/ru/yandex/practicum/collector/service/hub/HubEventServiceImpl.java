@@ -25,12 +25,11 @@ public class HubEventServiceImpl implements HubEventService{
     public void sendEvent(HubEvent event) {
         HubEventAvro message = mapper.toHubEventAvro(event);
 
-        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(topic,
+        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(
+                topic,
                 event.getHubId(),
                 message);
 
-        log.info("\nSend body: {}", message);
-        log.info("Get topic: {}", topic);
         log.info("Send record: {} \n", record);
         producer.send(record);
     }

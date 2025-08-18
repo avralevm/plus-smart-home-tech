@@ -30,8 +30,6 @@ public class SensorEventServiceImpl implements SensorEventService {
                 event.getId(),
                 message);
 
-        log.info("\nSend body: {}", message);
-        log.info("Get topic: {}", topic);
         log.info("Send record: {} \n", record);
         producer.send(record);
     }
