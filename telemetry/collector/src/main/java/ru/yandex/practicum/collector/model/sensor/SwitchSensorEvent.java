@@ -4,10 +4,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @ToString(callSuper = true)
+@SuperBuilder
 public class SwitchSensorEvent extends SensorEvent {
     @NotNull
     private boolean state;
