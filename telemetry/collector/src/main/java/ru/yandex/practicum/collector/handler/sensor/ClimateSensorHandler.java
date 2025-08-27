@@ -2,10 +2,10 @@ package ru.yandex.practicum.collector.handler.sensor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.sensor.ClimateSensorEvent;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
 import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.ClimateSensorAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 import java.time.Instant;
 
@@ -18,16 +18,19 @@ public class ClimateSensorHandler implements SensorEventHandler {
     }
 
     @Override
-    public SensorEvent handle(SensorEventProto event) {
-        ClimateSensorProto climateSensor = event.getClimateSensor();
+    public SensorEventAvro handle(SensorEventProto event) {
+        ClimateSensorProto climateProto = event.getClimateSensor();
 
-        return ClimateSensorEvent.builder()
-                .id(event.getId())
-                .hubId(event.getHubId())
-                .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
-                .temperatureC(climateSensor.getTemperatureC())
-                .humidity(climateSensor.getHumidity())
-                .co2Level(climateSensor.getCo2Level())
+        ClimateSensorAvro climateAvro = ClimateSensorAvro.newBuilder()
+                .setTemperatureC(climateProto.getTemperatureC())
+                .setHumidity(climateProto.getHumidity())
+                .setCo2Level(climateProto.getCo2Level())
+                .build();
+        return SensorEventAvro.newBuilder()
+                .setId(event.getId())
+                .setHubId(event.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setPayload(climateAvro)
                 .build();
     }
 }

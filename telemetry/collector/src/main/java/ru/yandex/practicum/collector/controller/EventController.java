@@ -8,13 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import ru.yandex.practicum.collector.handler.hub.HubEventHandler;
 import ru.yandex.practicum.collector.handler.sensor.SensorEventHandler;
-import ru.yandex.practicum.collector.model.hub.HubEvent;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
 import ru.yandex.practicum.collector.service.hub.HubEventService;
 import ru.yandex.practicum.collector.service.sensor.SensorEventService;
 import ru.yandex.practicum.grpc.telemetry.collector.CollectorControllerGrpc;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 import java.util.Map;
 import java.util.Set;
@@ -51,7 +51,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     public void collectSensorEvent(SensorEventProto request, StreamObserver<Empty> responseObserver) {
         try {
             if (sensorEventHandlers.containsKey(request.getPayloadCase())) {
-                SensorEvent event = sensorEventHandlers.get(request.getPayloadCase()).handle(request);
+                SensorEventAvro event = sensorEventHandlers.get(request.getPayloadCase()).handle(request);
                 log.info("Processed sensor event. Type: {}, Event: {}", request.getPayloadCase(), event);
                 sensorEventService.sendEvent(event);
             } else {
@@ -70,9 +70,8 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
         try {
             if (hubEventHandlers.containsKey(request.getPayloadCase())) {
-                log.info("Request. Type: {}, Event: {}", request.getPayloadCase(), request);
-                HubEvent event = hubEventHandlers.get(request.getPayloadCase()).handle(request);
-                log.info("Processed hub event. Type: {}, Event: {}", event.getType(), event);
+                HubEventAvro event = hubEventHandlers.get(request.getPayloadCase()).handle(request);
+                log.info("Processed hub event. Type: {}, Event: {}", request.getPayloadCase(), event);
                 hubEventService.sendEvent(event);
             } else {
                 throw new IllegalArgumentException("Не могу найти обработчик для события " + request.getPayloadCase());

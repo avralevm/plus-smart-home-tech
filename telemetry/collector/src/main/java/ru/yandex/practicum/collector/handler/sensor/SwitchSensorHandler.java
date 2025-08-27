@@ -2,10 +2,10 @@ package ru.yandex.practicum.collector.handler.sensor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
-import ru.yandex.practicum.collector.model.sensor.SwitchSensorEvent;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SwitchSensorProto;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SwitchSensorAvro;
 
 import java.time.Instant;
 
@@ -18,14 +18,17 @@ public class SwitchSensorHandler implements SensorEventHandler {
     }
 
     @Override
-    public SensorEvent handle(SensorEventProto event) {
-        SwitchSensorProto switchSensor = event.getSwitchSensor();
+    public SensorEventAvro handle(SensorEventProto event) {
+        SwitchSensorProto switchProto = event.getSwitchSensor();
 
-        return SwitchSensorEvent.builder()
-                .id(event.getId())
-                .hubId(event.getHubId())
-                .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
-                .state(switchSensor.getState())
+        SwitchSensorAvro switchAvro = SwitchSensorAvro.newBuilder()
+                .setState(switchProto.getState())
+                .build();
+        return SensorEventAvro.newBuilder()
+                .setId(event.getId())
+                .setHubId(event.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setPayload(switchAvro)
                 .build();
     }
 }

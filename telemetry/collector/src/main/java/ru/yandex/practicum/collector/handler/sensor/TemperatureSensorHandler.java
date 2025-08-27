@@ -2,10 +2,10 @@ package ru.yandex.practicum.collector.handler.sensor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
-import ru.yandex.practicum.collector.model.sensor.TemperatureSensorEvent;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.TemperatureSensorProto;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.TemperatureSensorAvro;
 
 import java.time.Instant;
 
@@ -18,15 +18,18 @@ public class TemperatureSensorHandler implements SensorEventHandler {
     }
 
     @Override
-    public SensorEvent handle(SensorEventProto event) {
-        TemperatureSensorProto temperatureSensor = event.getTemperatureSensor();
+    public SensorEventAvro handle(SensorEventProto event) {
+        TemperatureSensorProto temperatureProto = event.getTemperatureSensor();
 
-        return TemperatureSensorEvent.builder()
-                .id(event.getId())
-                .hubId(event.getHubId())
-                .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
-                .temperatureC(temperatureSensor.getTemperatureC())
-                .temperatureF(temperatureSensor.getTemperatureF())
+        TemperatureSensorAvro sensorAvro = TemperatureSensorAvro.newBuilder()
+                .setTemperatureC(temperatureProto.getTemperatureC())
+                .setTemperatureF(temperatureProto.getTemperatureF())
+                .build();
+        return SensorEventAvro.newBuilder()
+                .setId(event.getId())
+                .setHubId(event.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setPayload(sensorAvro)
                 .build();
     }
 }

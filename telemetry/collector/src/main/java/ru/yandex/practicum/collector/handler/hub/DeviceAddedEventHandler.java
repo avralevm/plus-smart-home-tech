@@ -2,11 +2,11 @@ package ru.yandex.practicum.collector.handler.hub;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.hub.DeviceAddedEvent;
-import ru.yandex.practicum.collector.model.hub.DeviceType;
-import ru.yandex.practicum.collector.model.hub.HubEvent;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceAddedEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 
 import java.time.Instant;
 
@@ -19,14 +19,17 @@ public class DeviceAddedEventHandler implements HubEventHandler {
     }
 
     @Override
-    public HubEvent handle(HubEventProto event) {
-        DeviceAddedEventProto deviceAddedEvent = event.getDeviceAdded();
+    public HubEventAvro handle(HubEventProto event) {
+        DeviceAddedEventProto eventProto = event.getDeviceAdded();
 
-        return DeviceAddedEvent.builder()
-                .hubId(event.getHubId())
-                .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
-                .id(deviceAddedEvent.getId())
-                .deviceType(DeviceType.valueOf(deviceAddedEvent.getType().name()))
+        DeviceAddedEventAvro eventAvro = DeviceAddedEventAvro.newBuilder()
+                .setId(eventProto.getId())
+                .setType(DeviceTypeAvro.valueOf(eventProto.getType().name()))
+                .build();
+        return HubEventAvro.newBuilder()
+                .setHubId(event.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setPayload(eventAvro)
                 .build();
     }
 }

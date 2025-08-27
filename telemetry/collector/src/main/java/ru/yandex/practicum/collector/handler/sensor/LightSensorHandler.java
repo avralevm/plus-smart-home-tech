@@ -2,10 +2,10 @@ package ru.yandex.practicum.collector.handler.sensor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.sensor.LightSensorEvent;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
 import ru.yandex.practicum.grpc.telemetry.event.LightSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.LightSensorAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 import java.time.Instant;
 
@@ -18,15 +18,18 @@ public class LightSensorHandler implements SensorEventHandler {
     }
 
     @Override
-    public SensorEvent handle(SensorEventProto event) {
-        LightSensorProto lightSensor = event.getLightSensor();
+    public SensorEventAvro handle(SensorEventProto event) {
+        LightSensorProto sensorProto = event.getLightSensor();
 
-        return LightSensorEvent.builder()
-                .id(event.getId())
-                .hubId(event.getHubId())
-                .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
-                .linkQuality(lightSensor.getLinkQuality())
-                .luminosity(lightSensor.getLuminosity())
+        LightSensorAvro sensorAvro = LightSensorAvro.newBuilder()
+                .setLinkQuality(sensorProto.getLinkQuality())
+                .setLuminosity(sensorProto.getLuminosity())
+                .build();
+        return SensorEventAvro.newBuilder()
+                .setId(event.getId())
+                .setHubId(event.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setPayload(sensorAvro)
                 .build();
     }
 }

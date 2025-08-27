@@ -2,10 +2,10 @@ package ru.yandex.practicum.collector.handler.hub;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.hub.DeviceRemovedEvent;
-import ru.yandex.practicum.collector.model.hub.HubEvent;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceRemovedEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.DeviceRemovedEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 
 import java.time.Instant;
 
@@ -18,13 +18,16 @@ public class DeviceRemovedEventHandler implements HubEventHandler {
     }
 
     @Override
-    public HubEvent handle(HubEventProto event) {
-        DeviceRemovedEventProto deviceRemovedEvent = event.getDeviceRemoved();
+    public HubEventAvro handle(HubEventProto event) {
+        DeviceRemovedEventProto eventProto = event.getDeviceRemoved();
 
-        return DeviceRemovedEvent.builder()
-                .hubId(event.getHubId())
-                .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
-                .id(deviceRemovedEvent.getId())
+        DeviceRemovedEventAvro eventAvro = DeviceRemovedEventAvro.newBuilder()
+                .setId(eventProto.getId())
+                .build();
+        return HubEventAvro.newBuilder()
+                .setHubId(event.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setPayload(eventAvro)
                 .build();
     }
 }

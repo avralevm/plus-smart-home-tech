@@ -2,10 +2,10 @@ package ru.yandex.practicum.collector.handler.sensor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.sensor.MotionSensorEvent;
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
 import ru.yandex.practicum.grpc.telemetry.event.MotionSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.MotionSensorAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 import java.time.Instant;
 
@@ -18,16 +18,19 @@ public class MotionSensorHandler implements SensorEventHandler {
     }
 
     @Override
-    public SensorEvent handle(SensorEventProto event) {
-        MotionSensorProto motionSensor = event.getMotionSensor();
+    public SensorEventAvro handle(SensorEventProto event) {
+        MotionSensorProto motionProto = event.getMotionSensor();
 
-        return MotionSensorEvent.builder()
-                .id(event.getId())
-                .hubId(event.getHubId())
-                .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
-                .linkQuality(motionSensor.getLinkQuality())
-                .motion(motionSensor.getMotion())
-                .voltage(motionSensor.getVoltage())
+        MotionSensorAvro motionAvro = MotionSensorAvro.newBuilder()
+                .setLinkQuality(motionProto.getLinkQuality())
+                .setMotion(motionProto.getMotion())
+                .setVoltage(motionProto.getVoltage())
+                .build();
+        return SensorEventAvro.newBuilder()
+                .setId(event.getId())
+                .setHubId(event.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setPayload(motionAvro)
                 .build();
     }
 }

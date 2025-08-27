@@ -2,10 +2,10 @@ package ru.yandex.practicum.collector.handler.hub;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.collector.model.hub.HubEvent;
-import ru.yandex.practicum.collector.model.hub.ScenarioRemovedEvent;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.ScenarioRemovedEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.ScenarioRemovedEventAvro;
 
 import java.time.Instant;
 
@@ -18,13 +18,16 @@ public class ScenarioRemovedEventHandler implements HubEventHandler {
     }
 
     @Override
-    public HubEvent handle(HubEventProto event) {
-        ScenarioRemovedEventProto scenarioRemovedEvent = event.getScenarioRemoved();
+    public HubEventAvro handle(HubEventProto event) {
+        ScenarioRemovedEventProto eventProto = event.getScenarioRemoved();
 
-        return ScenarioRemovedEvent.builder()
-                .hubId(event.getHubId())
-                .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
-                .name(scenarioRemovedEvent.getName())
+        ScenarioRemovedEventAvro eventAvro = ScenarioRemovedEventAvro.newBuilder()
+                .setName(eventProto.getName())
+                .build();
+        return HubEventAvro.newBuilder()
+                .setHubId(event.getHubId())
+                .setTimestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
+                .setPayload(eventAvro)
                 .build();
     }
 }
