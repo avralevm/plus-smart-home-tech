@@ -70,8 +70,9 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
         try {
             if (hubEventHandlers.containsKey(request.getPayloadCase())) {
+                log.info("Request. Type: {}, Event: {}", request.getPayloadCase(), request);
                 HubEvent event = hubEventHandlers.get(request.getPayloadCase()).handle(request);
-                log.info("Processed hub event. Type: {}, Event: {}", request.getPayloadCase(), event);
+                log.info("Processed hub event. Type: {}, Event: {}", event.getType(), event);
                 hubEventService.sendEvent(event);
             } else {
                 throw new IllegalArgumentException("Не могу найти обработчик для события " + request.getPayloadCase());

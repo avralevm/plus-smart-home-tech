@@ -1,5 +1,6 @@
 package ru.yandex.practicum.collector.handler.hub;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.collector.model.hub.DeviceAddedEvent;
 import ru.yandex.practicum.collector.model.hub.DeviceType;
@@ -10,6 +11,7 @@ import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import java.time.Instant;
 
 @Component
+@RequiredArgsConstructor
 public class DeviceAddedEventHandler implements HubEventHandler {
     @Override
     public HubEventProto.PayloadCase getMessageType() {

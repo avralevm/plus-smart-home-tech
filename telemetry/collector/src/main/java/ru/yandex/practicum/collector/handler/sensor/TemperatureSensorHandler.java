@@ -1,5 +1,6 @@
 package ru.yandex.practicum.collector.handler.sensor;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.collector.model.sensor.SensorEvent;
 import ru.yandex.practicum.collector.model.sensor.TemperatureSensorEvent;
@@ -9,6 +10,7 @@ import ru.yandex.practicum.grpc.telemetry.event.TemperatureSensorProto;
 import java.time.Instant;
 
 @Component
+@RequiredArgsConstructor
 public class TemperatureSensorHandler implements SensorEventHandler {
     @Override
     public SensorEventProto.PayloadCase getMessageType() {

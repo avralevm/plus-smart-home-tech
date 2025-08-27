@@ -1,5 +1,6 @@
 package ru.yandex.practicum.collector.handler.hub;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.collector.model.hub.*;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceActionProto;
@@ -10,6 +11,7 @@ import ru.yandex.practicum.grpc.telemetry.event.ScenarioConditionProto;
 import java.time.Instant;
 
 @Component
+@RequiredArgsConstructor
 public class ScenarioAddedEventHandler implements HubEventHandler {
     @Override
     public HubEventProto.PayloadCase getMessageType() {
@@ -24,10 +26,10 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
                 .hubId(event.getHubId())
                 .timestamp(Instant.ofEpochSecond(event.getTimestamp().getSeconds(), event.getTimestamp().getNanos()))
                 .name(scenarioAddedEvent.getName())
-                .conditions(scenarioAddedEvent.getConditionsList().stream()
+                .conditions(scenarioAddedEvent.getConditionList().stream()
                         .map(ScenarioAddedEventHandler::handleScenarioCondition)
                         .toList())
-                .actions(scenarioAddedEvent.getActionsList().stream()
+                .actions(scenarioAddedEvent.getActionList().stream()
                         .map(ScenarioAddedEventHandler::handleDeviceAction)
                         .toList())
                 .build();
