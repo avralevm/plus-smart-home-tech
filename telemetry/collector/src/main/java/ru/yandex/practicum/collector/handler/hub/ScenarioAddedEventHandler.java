@@ -40,8 +40,16 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
                 .sensorId(condition.getSensorId())
                 .type(ConditionType.valueOf(condition.getType().toString()))
                 .operation(ConditionOperation.valueOf(condition.getOperation().toString()))
-                .value(condition.getIntValue())
+                .value(extractConditionValue(condition))
                 .build();
+    }
+
+    private static Object extractConditionValue(ScenarioConditionProto condition) {
+        return switch (condition.getValueCase()) {
+            case INT_VALUE -> condition.getIntValue();
+            case BOOL_VALUE -> condition.getBoolValue();
+            case VALUE_NOT_SET -> throw new IllegalArgumentException("Condition value not set");
+        };
     }
 
     private static DeviceAction handleDeviceAction(DeviceActionProto deviceAction) {
