@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
@@ -30,17 +29,15 @@ public class AggregationStarter {
     private final AggregatorService aggregatorService;
 
     private static final Duration CONSUME_ATTEMPT_TIMEOUT = Duration.ofMillis(1000);
-    @Value("${collector.kafka.producer.topics.sensor-events}")
+    @Value("${collector.kafka.topics.sensor-events}")
     private String topic;
 
     private static final Map<TopicPartition, OffsetAndMetadata> currentOffsets = new HashMap<>();
 
     public void start() {
         Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
-
         try {
             consumer.subscribe(List.of(topic));
-
             while (true) {
                 ConsumerRecords<String, SensorEventAvro> records = consumer.poll(CONSUME_ATTEMPT_TIMEOUT);
                 int count = 0;
@@ -70,16 +67,7 @@ public class AggregationStarter {
 
     private void handleRecord(ConsumerRecord<String, SensorEventAvro> consumerRecord) throws InterruptedException {
         Optional<SensorsSnapshotAvro> snapshotAvro = aggregatorService.updateState(consumerRecord.value());
-        if (snapshotAvro.isPresent()) {
-            SensorsSnapshotAvro snapshot = snapshotAvro.get();
-            ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(
-                    topic,
-                    snapshot.getHubId(),
-                    snapshot);
-
-            log.info("Send record: {} \n", record);
-            producer.send(record);
-        }
+        snapshotAvro.ifPresent(snapshot -> aggregatorService.sendSnapshot(producer, snapshot));
     }
 
     private static void manageOffsets(ConsumerRecord<String, SensorEventAvro> record, int count, Consumer<String, SensorEventAvro> consumer) {

@@ -2,6 +2,10 @@ package ru.yandex.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.specific.SpecificRecordBase;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
@@ -13,6 +17,8 @@ import java.util.*;
 @Slf4j
 public class AggregatorServiceImpl implements AggregatorService {
     private final Map<String, SensorsSnapshotAvro> snapshots = new HashMap<>();
+    @Value("${collector.kafka.topics.snapshot-events}")
+    private String topic;
 
     @Override
     public Optional<SensorsSnapshotAvro> updateState(SensorEventAvro event) {
@@ -32,6 +38,17 @@ public class AggregatorServiceImpl implements AggregatorService {
         snapshotAvro.setTimestamp(event.getTimestamp());
         snapshots.put(event.getHubId(), snapshotAvro);
         return Optional.of(snapshotAvro);
+    }
+
+    @Override
+    public void sendSnapshot(Producer<String, SpecificRecordBase> producer, SensorsSnapshotAvro snapshot) {
+        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(
+                topic,
+                snapshot.getHubId(),
+                snapshot);
+
+        log.info("Send record: {} \n", record);
+        producer.send(record);
     }
 
     private SensorsSnapshotAvro createNewSensorsSnapshot(String hubId) {
