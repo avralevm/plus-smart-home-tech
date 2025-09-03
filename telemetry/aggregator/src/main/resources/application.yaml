@@ -3,13 +3,11 @@ server:
 
 collector:
   kafka:
+    properties:
+      bootstrap-servers": localhost:9092
     consumer:
       properties:
-        "group.id": aggregator
-        "bootstrap-servers": localhost:9092
-    producer:
-      properties:
-        bootstrap.servers: localhost:9092
+        "group-id": aggregator
     topics:
       sensor-events: telemetry.sensors.v1
       hub-events: telemetry.hubs.v1

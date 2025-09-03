@@ -22,22 +22,23 @@ public class AggregatorServiceImpl implements AggregatorService {
 
     @Override
     public Optional<SensorsSnapshotAvro> updateState(SensorEventAvro event) {
-        SensorsSnapshotAvro snapshotAvro = snapshots.getOrDefault(
+        SensorsSnapshotAvro currentSnapshot = snapshots.getOrDefault(
                 event.getHubId(),
-                createNewSensorsSnapshot(event.getHubId())
-        );
+                createNewSensorsSnapshot(event.getHubId(), event.getTimestamp()));
 
-        SensorStateAvro oldState = snapshotAvro.getSensorsState().get(event.getId());
-        if (oldState != null && oldState.getTimestamp().isAfter(event.getTimestamp()) &&
-                oldState.getData().equals(event.getPayload())) {
-            return Optional.empty();
+        SensorStateAvro oldState = currentSnapshot.getSensorsState().get(event.getId());
+        if (oldState != null) {
+            if (oldState.getTimestamp().isAfter(event.getTimestamp()) || oldState.getData().equals(event.getPayload())) {
+                return Optional.empty();
+            }
         }
 
-        SensorStateAvro newSnapshot = createNewSensorsSnapshot(event);
-        snapshotAvro.getSensorsState().put(event.getId(), newSnapshot);
-        snapshotAvro.setTimestamp(event.getTimestamp());
-        snapshots.put(event.getHubId(), snapshotAvro);
-        return Optional.of(snapshotAvro);
+        SensorStateAvro newState = createSensorState(event);
+        currentSnapshot.getSensorsState().put(event.getId(), newState);
+        currentSnapshot.setTimestamp(event.getTimestamp());
+        snapshots.put(event.getHubId(), currentSnapshot);
+
+        return Optional.of(currentSnapshot);
     }
 
     @Override
@@ -51,15 +52,15 @@ public class AggregatorServiceImpl implements AggregatorService {
         producer.send(record);
     }
 
-    private SensorsSnapshotAvro createNewSensorsSnapshot(String hubId) {
+    private SensorsSnapshotAvro createNewSensorsSnapshot(String hubId, Instant timestamp) {
         return SensorsSnapshotAvro.newBuilder()
                 .setHubId(hubId)
-                .setTimestamp(Instant.now())
+                .setTimestamp(timestamp)
                 .setSensorsState(new HashMap<>())
                 .build();
     }
 
-    private SensorStateAvro createNewSensorsSnapshot(SensorEventAvro event) {
+    private SensorStateAvro createSensorState(SensorEventAvro event) {
         return SensorStateAvro.newBuilder()
                 .setTimestamp(event.getTimestamp())
                 .setData(event.getPayload())
