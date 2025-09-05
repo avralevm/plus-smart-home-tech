@@ -11,7 +11,7 @@ import static ru.yandex.practicum.model.ConditionType.MOTION;
 public class MotionSensorHandler implements SensorEventHandler {
     @Override
     public String getType() {
-        return MotionSensorHandler.class.getName();
+        return MotionSensorAvro.class.getName();
     }
 
     @Override

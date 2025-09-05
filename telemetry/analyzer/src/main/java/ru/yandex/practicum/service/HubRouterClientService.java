@@ -31,9 +31,10 @@ public class HubRouterClientService {
     }
 
     private void sendScenarioActions(Scenario scenario) {
-        for (Map.Entry<String, Action> entry : scenario.getActions().entrySet()) {
-            String sensorId = entry.getKey();
-            Action action = entry.getValue();
+        Map<String, Action> actionMap = scenario.getActions();
+
+        for (String sensorId : actionMap.keySet()) {
+            Action action = actionMap.get(sensorId);
 
             DeviceActionRequest request = mapToActionRequest(scenario, sensorId, action);
             try {

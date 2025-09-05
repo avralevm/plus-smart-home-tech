@@ -12,7 +12,7 @@ public class LightSensorHandler implements SensorEventHandler {
 
     @Override
     public String getType() {
-        return LightSensorHandler.class.getName();
+        return LightSensorAvro.class.getName();
     }
 
     @Override
