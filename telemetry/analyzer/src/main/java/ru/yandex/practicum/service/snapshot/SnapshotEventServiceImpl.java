@@ -1,6 +1,5 @@
 package ru.yandex.practicum.service.snapshot;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.handler.sensor.SensorEventHandler;
@@ -9,6 +8,7 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 import ru.yandex.practicum.model.Condition;
 import ru.yandex.practicum.model.Scenario;
 import ru.yandex.practicum.repository.ScenarioRepository;
+import jakarta.transaction.Transactional;
 import ru.yandex.practicum.service.HubRouterClientService;
 
 import java.util.List;
@@ -35,6 +35,7 @@ public class SnapshotEventServiceImpl implements SnapshotEventService {
         this.hubRouterClient = hubRouterClient;
     }
 
+    @Transactional
     @Override
     public void handle(SensorsSnapshotAvro snapshotAvro) {
         List<Scenario> scenarios = repository.findByHubId(snapshotAvro.getHubId());
@@ -51,11 +52,19 @@ public class SnapshotEventServiceImpl implements SnapshotEventService {
         Map<String, Condition> conditions = scenario.getConditions();
         Map<String, SensorStateAvro> sensorStates = snapshot.getSensorsState();
 
+        if (snapshot == null || snapshot.getSensorsState().isEmpty()) {
+            return false;
+        }
+
         return conditions.keySet().stream()
                 .allMatch(sensorId -> checkCondition(conditions.get(sensorId), sensorStates.get(sensorId)));
     }
 
     private boolean checkCondition(Condition condition, SensorStateAvro sensorState) {
+        if (sensorState == null) {
+            return false;
+        }
+
         String typeHandle = sensorState.getData().getClass().getName();
         if (!handlers.containsKey(typeHandle)) {
             throw new IllegalArgumentException("Не найден данный обработчик: " + typeHandle);
