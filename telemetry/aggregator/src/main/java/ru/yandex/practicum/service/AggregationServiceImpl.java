@@ -15,7 +15,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AggregatorServiceImpl implements AggregatorService {
+public class AggregationServiceImpl implements AggregationService {
     private final Map<String, SensorsSnapshotAvro> snapshots = new HashMap<>();
     @Value("${collector.kafka.topics.snapshot-events}")
     private String topic;
