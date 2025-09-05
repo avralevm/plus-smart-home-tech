@@ -1,7 +1,7 @@
 package ru.yandex.practicum.collector.service.sensor;
 
-import ru.yandex.practicum.collector.model.sensor.SensorEvent;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 public interface SensorEventService {
-    void sendEvent(SensorEvent event);
+    void sendEvent(SensorEventAvro event);
 }

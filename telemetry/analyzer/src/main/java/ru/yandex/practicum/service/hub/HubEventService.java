@@ -1,7 +1,7 @@
-package ru.yandex.practicum.collector.service.hub;
+package ru.yandex.practicum.service.hub;
 
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 
 public interface HubEventService {
-    void sendEvent(HubEventAvro event);
-}
+    void handle(HubEventAvro hubEventAvro);
+;}

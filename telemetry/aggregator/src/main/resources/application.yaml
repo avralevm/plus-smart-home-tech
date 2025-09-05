@@ -1,0 +1,14 @@
+server:
+  port: 8081
+
+collector:
+  kafka:
+    properties:
+      bootstrap-servers": localhost:9092
+    consumer:
+      properties:
+        "group-id": aggregator
+    topics:
+      sensor-events: telemetry.sensors.v1
+      hub-events: telemetry.hubs.v1
+      snapshot-events: telemetry.snapshots.v1
