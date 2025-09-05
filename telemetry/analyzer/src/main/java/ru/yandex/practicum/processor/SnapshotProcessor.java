@@ -23,7 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SnapshotProcessor implements Runnable {
     private final Consumer<String, SensorsSnapshotAvro> consumer;
-    private SnapshotEventService service;
+    private final SnapshotEventService service;
 
     private static final Map<TopicPartition, OffsetAndMetadata> currentOffsets = new HashMap<>();
     private static final Duration CONSUME_ATTEMPT_TIMEOUT = Duration.ofMillis(1000);
@@ -49,6 +49,7 @@ public class SnapshotProcessor implements Runnable {
 
         } catch (Exception e) {
             log.error("Ошибка во время обработки событий от датчиков", e);
+            throw new RuntimeException(e.getMessage());
         } finally {
             try {
                 consumer.commitSync(currentOffsets);
