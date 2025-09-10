@@ -21,7 +21,7 @@ import serializer.GeneralAvroSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+@ConfigurationProperties("aggregator.kafka")
 @RequiredArgsConstructor
 public class KafkaConfig {
     @Value("${collector.kafka.properties.bootstrap-servers}")

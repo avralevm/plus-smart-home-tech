@@ -1,14 +1,12 @@
-server:
-  port: 8081
+spring:
+  application:
+    name: aggregator
 
-collector:
-  kafka:
-    properties:
-      bootstrap-servers": localhost:9092
-    consumer:
-      properties:
-        "group-id": aggregator
-    topics:
-      sensor-events: telemetry.sensors.v1
-      hub-events: telemetry.hubs.v1
-      snapshot-events: telemetry.snapshots.v1
+  config:
+    import: configserver:http://localhost:8888
+  cloud:
+    config:
+      fail-fast: true
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000
