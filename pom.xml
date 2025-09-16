@@ -20,6 +20,7 @@
         <module>infra</module>
         <module>commerce</module>
         <module>infra/config-server</module>
+        <module>infra/discovery-server</module>
     </modules>
 
     <properties>
@@ -91,7 +92,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <!--    / GRPC dependencies management        -->
         </dependencies>
     </dependencyManagement>
