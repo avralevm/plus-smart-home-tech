@@ -11,7 +11,7 @@ import ru.yandex.practicum.warehouse.AddressDto;
 import ru.yandex.practicum.warehouse.BookedProductsDto;
 import ru.yandex.practicum.warehouse.NewProductInWarehouseRequest;
 
-@FeignClient(name = "warehouse", path = "/api/v1/warehouse")
+@FeignClient(name = "warehouse", path = "/api/v1/warehouse", fallbackFactory = WarehouseFeignClientFallback.class)
 public interface WarehouseProductFeignClient {
     @PutMapping
     void addProductInWarehouse(@RequestBody NewProductInWarehouseRequest request);
