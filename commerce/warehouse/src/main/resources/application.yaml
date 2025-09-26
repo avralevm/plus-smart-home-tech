@@ -3,15 +3,16 @@ spring:
     name: warehouse
   config:
     import: "configserver:"
+
   cloud:
     config:
+      discovery:
+        service-id: config-server
+        enabled: true
       fail-fast: true
       retry:
         useRandomPolicy: true
         max-interval: 6000
-      discovery:
-        enabled: true
-        serviceId: config-server
 
 eureka:
   client:

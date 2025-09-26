@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "warehouse_product")
+@Table(name = "warehouse_product")
 public class WarehouseProduct {
     @Id
     @Column(name = "product_id")
