@@ -13,7 +13,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
+        jdbc:
+          time_zone: Europe/Moscow
+        show_sql: false
+        type:
+          descriptor:
+            sql:
+              BasicBinder: OFF
