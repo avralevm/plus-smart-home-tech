@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:6432/shopping_cart
-    username: commerce
-    password: commerce
+    url: jdbc:postgresql://localhost:7432/shopping_store
+    username: postgres
+    password: password
     driver-class-name: org.postgresql.Driver
   sql:
     init:
@@ -21,11 +21,3 @@ logging:
     org.springframework.http: TRACE
     org.slf4j: DEBUG
     ru.practicum: DEBUG
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      warehouse:
-        slidingWindowSize: 10
-        failureRateThreshold: 50
-        waitDurationInOpenState: 60s

@@ -34,38 +34,38 @@ services:
                              --bootstrap-server kafka:29092'"
     init: true
 
-  db:
+  analyzer-db:
     image: postgres:16.1
-    container_name: postgres-analyzer
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    ports:
-      - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=analyzer
-      - POSTGRES_USER=analyzer
-      - POSTGRES_DB=analyzer
-    healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 5s
-      interval: 5s
-      retries: 10
+      POSTGRES_DB: analyzer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "6432:5432"
 
   store-db:
     image: postgres:16.1
-    container_name: postgres-commerce
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "6432:5432"
     environment:
-      - POSTGRES_PASSWORD=commerce
-      - POSTGRES_USER=commerce
-    healthcheck:
-      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-      timeout: 5s
-      interval: 5s
-      retries: 10
+      POSTGRES_DB: shopping_store
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "7432:5432"
+
+  cart-db:
+    image: postgres:16.1
+    environment:
+      POSTGRES_DB: shopping_cart
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "8432:5432"
+
+  warehouse-db:
+    image: postgres:16.1
+    environment:
+      POSTGRES_DB: warehouse
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "9432:5432"
