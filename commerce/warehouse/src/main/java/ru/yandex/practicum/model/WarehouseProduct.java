@@ -1,20 +1,17 @@
 package ru.yandex.practicum.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-@Data
-@Table(name = "warehouse_product")
+@AllArgsConstructor
 public class WarehouseProduct {
     @Id
-    @Column(name = "product_id")
     private UUID productId;
 
     @Column
@@ -27,5 +24,5 @@ public class WarehouseProduct {
     private boolean fragile;
 
     @Column
-    private Long quantity = 0L;
+    private Long quantity;
 }

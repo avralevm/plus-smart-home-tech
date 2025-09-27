@@ -1,22 +1,14 @@
 package ru.yandex.practicum.model;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Embeddable
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Dimension {
-
-    @Column
     private Double width;
-
-    @Column
     private Double height;
-
-    @Column
     private Double depth;
 }

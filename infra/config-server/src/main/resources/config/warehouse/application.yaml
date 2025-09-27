@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://warehouse-db:9432/warehouse
+    url: jdbc:postgresql://localhost:9432/warehouse
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver

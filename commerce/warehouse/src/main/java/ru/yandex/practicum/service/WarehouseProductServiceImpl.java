@@ -18,7 +18,6 @@ import ru.yandex.practicum.warehouse.BookedProductsDto;
 import ru.yandex.practicum.warehouse.NewProductInWarehouseRequest;
 
 import java.security.SecureRandom;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -37,11 +36,16 @@ public class WarehouseProductServiceImpl implements WarehouseProductService {
     @Override
     @Transactional
     public void addProductInWarehouse(NewProductInWarehouseRequest request) {
-        if (repository.findById(request.getProductId()).isPresent()){
+        if (request.getProductId() != null && repository.findById(request.getProductId()).isPresent()){
             throw new SpecifiedProductAlreadyInWarehouseException
                     ("Товар с id: " + request.getProductId() + " уже зарегистрирован на складе");
         }
-        WarehouseProduct product = repository.save(mapper.toWarehouseProduct(request));
+        WarehouseProduct product = new WarehouseProduct();
+        product.setProductId(request.getProductId());
+        product.setFragile(request.isFragile());
+        product.setDimension(mapper.dtoToDimension(request.getDimension()));
+        product.setWeight(request.getWeight());
+        product.setQuantity(0L);
         log.info("Создан product: {}", product);
     }
 
