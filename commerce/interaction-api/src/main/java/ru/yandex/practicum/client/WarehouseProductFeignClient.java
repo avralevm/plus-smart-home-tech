@@ -1,5 +1,6 @@
 package ru.yandex.practicum.client;
 
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,10 @@ import ru.yandex.practicum.warehouse.NewProductInWarehouseRequest;
 @FeignClient(name = "warehouse", path = "/api/v1/warehouse", fallbackFactory = WarehouseFeignClientFallback.class)
 public interface WarehouseProductFeignClient {
     @PutMapping
-    void addProductInWarehouse(@RequestBody NewProductInWarehouseRequest request);
+    void addProductInWarehouse(@Valid @RequestBody NewProductInWarehouseRequest request);
 
     @PostMapping("/check")
-    BookedProductsDto checkProductQuantityEnoughForShoppingCart(@RequestBody ShoppingCartDto shoppingCartDto);
+    BookedProductsDto checkProductQuantityEnoughForShoppingCart(@Valid @RequestBody ShoppingCartDto shoppingCartDto);
 
     @PostMapping("/add")
     void AddProductToWarehouse(@RequestBody AddProductToWarehouseRequest request);
