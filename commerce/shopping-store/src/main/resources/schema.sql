@@ -1,4 +1,4 @@
-DROP TABLE products IF EXISTS;
+DROP TABLE IF EXISTS products CASCADE;
 
 CREATE TABLE IF NOT EXISTS products (
     product_id UUID PRIMARY KEY,
@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS products (
     quantity_state VARCHAR(10) NOT NULL,
     product_state VARCHAR(10) NOT NULL,
     product_category VARCHAR(10) NOT NULL,
-    price DOUBLE NOT NULL
-)
+    price DOUBLE PRECISION NOT NULL
+);
