@@ -11,7 +11,7 @@ public interface WarehouseProductService {
 
     BookedProductsDto checkProductQuantityEnoughForShoppingCart(ShoppingCartDto shoppingCartDto);
 
-    void AddProductToWarehouse(AddProductToWarehouseRequest request);
+    void addProductToWarehouse(AddProductToWarehouseRequest request);
 
     AddressDto getAddressWarehouse();
 }

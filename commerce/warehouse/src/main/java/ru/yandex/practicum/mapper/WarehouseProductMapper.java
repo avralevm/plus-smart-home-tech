@@ -9,7 +9,8 @@ import ru.yandex.practicum.warehouse.NewProductInWarehouseRequest;
 
 @Mapper(componentModel = "spring")
 public interface WarehouseProductMapper {
-    Dimension dtoToDimension(DimensionDto dto);
+    @Mapping(target = "dimension", source = "dimension")
+    WarehouseProduct toWarehouseProduct(NewProductInWarehouseRequest request);
 
-    DimensionDto dimensionToDto(Dimension dimension);
+    Dimension toDimension(DimensionDto dto);
 }

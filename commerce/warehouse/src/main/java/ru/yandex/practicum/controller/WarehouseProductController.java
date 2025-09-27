@@ -33,7 +33,7 @@ public class WarehouseProductController implements WarehouseProductFeignClient {
     @PostMapping("/add")
     public void AddProductToWarehouse(@RequestBody AddProductToWarehouseRequest request) {
         log.info("[POST] Запрос на добавление определенного количества определенного товара: {}", request);
-        service.AddProductToWarehouse(request);
+        service.addProductToWarehouse(request);
     }
 
     @GetMapping("address")

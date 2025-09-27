@@ -36,16 +36,11 @@ public class WarehouseProductServiceImpl implements WarehouseProductService {
     @Override
     @Transactional
     public void addProductInWarehouse(NewProductInWarehouseRequest request) {
-        if (request.getProductId() != null && repository.findById(request.getProductId()).isPresent()){
+        if (repository.findById(request.getProductId()).isPresent()){
             throw new SpecifiedProductAlreadyInWarehouseException
                     ("Товар с id: " + request.getProductId() + " уже зарегистрирован на складе");
         }
-        WarehouseProduct product = new WarehouseProduct();
-        product.setProductId(request.getProductId());
-        product.setFragile(request.isFragile());
-        product.setDimension(mapper.dtoToDimension(request.getDimension()));
-        product.setWeight(request.getWeight());
-        product.setQuantity(0L);
+        WarehouseProduct product = repository.save(mapper.toWarehouseProduct(request));
         log.info("Создан product: {}", product);
     }
 
@@ -78,7 +73,7 @@ public class WarehouseProductServiceImpl implements WarehouseProductService {
 
     @Override
     @Transactional
-    public void AddProductToWarehouse(AddProductToWarehouseRequest request) {
+    public void addProductToWarehouse(AddProductToWarehouseRequest request) {
         WarehouseProduct product = repository.findById(request.getProductId()).orElseThrow(() -> {
             log.error("Нет информации о товаре на складе c id: {}", request.getProductId());
             return new NoSpecifiedProductInWarehouseException("Нет информации о товаре на складе id: " + request.getProductId());
