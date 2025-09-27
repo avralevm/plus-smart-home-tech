@@ -1,6 +1,8 @@
 package ru.yandex.practicum.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,7 @@ public class ShoppingCartController implements ShoppingCartFeignClient {
     private final ShoppingCartService service;
 
     @GetMapping
-    public ShoppingCartDto getShoppingCart(@RequestParam @NotBlank String username) {
+    public ShoppingCartDto getShoppingCart(@Valid @NotBlank @RequestParam String username) {
         log.info("[GET] Получение товара username: {}", username);
         return service.getShoppingCart(username);
     }
