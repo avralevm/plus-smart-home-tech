@@ -1,5 +1,6 @@
 package ru.yandex.practicum.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,13 @@ public class WarehouseProductController implements WarehouseProductFeignClient {
     private final WarehouseProductService service;
 
     @PutMapping
-    public void addProductInWarehouse(@RequestBody NewProductInWarehouseRequest request) {
+    public void addProductInWarehouse(@Valid @RequestBody NewProductInWarehouseRequest request) {
         log.info("[PUT] Запрос на добавление товара для обработки складом: {},", request);
         service.addProductInWarehouse(request);
     }
 
     @PostMapping("/check")
-    public BookedProductsDto checkProductQuantityEnoughForShoppingCart(@RequestBody ShoppingCartDto shoppingCartDto) {
+    public BookedProductsDto checkProductQuantityEnoughForShoppingCart(@Valid @RequestBody ShoppingCartDto shoppingCartDto) {
         log.info("[POST] Проверка количества товаров на складе для данной корзины продуктов: {}", shoppingCartDto);
         return service.checkProductQuantityEnoughForShoppingCart(shoppingCartDto);
     }

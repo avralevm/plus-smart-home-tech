@@ -27,7 +27,7 @@ public class ShoppingCartController implements ShoppingCartFeignClient {
     }
 
     @PutMapping
-    public ShoppingCartDto addProductToShoppingCart(@RequestParam @NotBlank String username,
+    public ShoppingCartDto addProductToShoppingCart(@RequestParam String username,
                                                     @RequestBody Map<UUID, Long> products) {
         log.info("[PUT] Добавление товара в корзину username: {}, products: {}", username, products);
         return service.addProductToShoppingCart(username, products);

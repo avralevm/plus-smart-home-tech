@@ -21,7 +21,7 @@ public class ShoppingCart {
     @Column(name = "cart_id")
     private UUID shoppingCartId;
 
-    @Column(nullable = false)
+    @Column
     private String username;
 
     @ElementCollection
