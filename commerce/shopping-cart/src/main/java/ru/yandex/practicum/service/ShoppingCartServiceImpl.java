@@ -26,16 +26,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final WarehouseProductFeignClient warehouseClient;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ShoppingCartDto getShoppingCart(String username) {
-        ShoppingCart shoppingCart = repository.findByUsername(username).orElse(createNewShoppingCart(username));
+        ShoppingCart shoppingCart = findOrCreate(username);
         return mapper.toShoppingCartDto(shoppingCart);
     }
 
     @Override
     @Transactional
     public ShoppingCartDto addProductToShoppingCart(String username, Map<UUID, Long> products) {
-        ShoppingCart shoppingCart = repository.findByUsername(username).orElse(createNewShoppingCart(username));
+        ShoppingCart shoppingCart = findOrCreate(username);
 
         if (shoppingCart.getState() == ShoppingCartState.DEACTIVATE) {
             throw new DeactivateShoppingCart("Нельзя добавлять товары. Корзина деактивирована");
@@ -86,6 +86,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.getProducts().put(request.getProductId(), request.getNewQuantity());
         ShoppingCart changedShoppingCart = repository.save(shoppingCart);
         return mapper.toShoppingCartDto(changedShoppingCart);
+    }
+
+    private ShoppingCart findOrCreate(String username) {
+        return repository.findByUsername(username)
+                .orElseGet(() -> createNewShoppingCart(username));
     }
 
     private ShoppingCart findShoppingCart(String username) {
