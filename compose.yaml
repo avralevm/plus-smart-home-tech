@@ -38,8 +38,8 @@ services:
     image: postgres:16.1
     environment:
       POSTGRES_DB: analyzer
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: analyzer
+      POSTGRES_PASSWORD: 12345
     ports:
       - "6432:5432"
 
@@ -47,8 +47,8 @@ services:
     image: postgres:16.1
     environment:
       POSTGRES_DB: shopping_store
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: shopping_store
+      POSTGRES_PASSWORD: 12345
     ports:
       - "7432:5432"
 
@@ -56,8 +56,8 @@ services:
     image: postgres:16.1
     environment:
       POSTGRES_DB: shopping_cart
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: shopping_cart
+      POSTGRES_PASSWORD: 12345
     ports:
       - "8432:5432"
 
@@ -65,7 +65,7 @@ services:
     image: postgres:16.1
     environment:
       POSTGRES_DB: warehouse
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: warehouse
+      POSTGRES_PASSWORD: 12345
     ports:
       - "9432:5432"
