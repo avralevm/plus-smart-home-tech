@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -19,5 +20,5 @@ public class ProductDto {
     private QuantityState quantityState;
     private ProductState productState;
     private ProductCategory productCategory;
-    private Double price;
+    private BigDecimal price;
 }

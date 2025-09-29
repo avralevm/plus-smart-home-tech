@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -22,5 +23,5 @@ public class NewProductInWarehouseRequest {
     private DimensionDto dimension;
 
     @NotNull
-    private Double weight;
+    private BigDecimal weight;
 }
