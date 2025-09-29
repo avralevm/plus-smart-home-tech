@@ -5,17 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
 public class Dimension {
-    @Column
-    private Double width;
+    @Column(precision = 19, scale = 4)
+    private BigDecimal width;
 
-    @Column
-    private Double height;
+    @Column(precision = 19, scale = 4)
+    private BigDecimal height;
 
-    @Column
-    private Double depth;
+    @Column(precision = 19, scale = 4)
+    private BigDecimal depth;
 }
+

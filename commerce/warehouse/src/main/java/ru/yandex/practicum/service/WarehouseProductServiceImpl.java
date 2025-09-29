@@ -17,6 +17,7 @@ import ru.yandex.practicum.warehouse.AddressDto;
 import ru.yandex.practicum.warehouse.BookedProductsDto;
 import ru.yandex.practicum.warehouse.NewProductInWarehouseRequest;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Random;
@@ -54,8 +55,8 @@ public class WarehouseProductServiceImpl implements WarehouseProductService {
         if (products.size() != cartProducts.size()) {
             throw new ProductInShoppingCartLowQuantityInWarehouse("Некоторых товаров нет на складе");
         }
-        double weight = 0;
-        double volume = 0;
+        BigDecimal weight = BigDecimal.ZERO;
+        BigDecimal volume = BigDecimal.ZERO;
         boolean fragile = false;
         for (Map.Entry<UUID, Long> cartProduct : cartProducts.entrySet()) {
             WarehouseProduct product = products.get(cartProduct.getKey());
@@ -64,8 +65,12 @@ public class WarehouseProductServiceImpl implements WarehouseProductService {
                         "Ошибка, товар из корзины не находится в требуемом количестве на складе: " + cartProduct.getValue());
             }
             Dimension dimension = product.getDimension();
-            weight += dimension.getWidth() * cartProduct.getValue();
-            volume += dimension.getHeight() * product.getWeight() * dimension.getDepth() * cartProduct.getValue();
+            BigDecimal quantity = BigDecimal.valueOf(cartProduct.getValue());
+            weight = weight.add(dimension.getWidth().multiply(quantity));
+            volume = volume.add(dimension.getHeight()
+                    .multiply(product.getWeight())
+                    .multiply(dimension.getDepth())
+                    .multiply(quantity));
             fragile = fragile || product.isFragile();
         }
         return new BookedProductsDto(weight, volume, fragile);

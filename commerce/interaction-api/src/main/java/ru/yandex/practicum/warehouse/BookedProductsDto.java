@@ -6,16 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookedProductsDto {
     @NotNull
-    private Double deliveryWeight;
+    private BigDecimal deliveryWeight;
 
     @NotNull
-    private Double deliveryVolume;
+    private BigDecimal deliveryVolume;
 
     @NotNull
     private boolean fragile;

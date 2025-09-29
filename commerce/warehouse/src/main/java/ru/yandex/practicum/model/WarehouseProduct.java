@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -17,8 +18,8 @@ public class WarehouseProduct {
     @Column(name = "product_id")
     private UUID productId;
 
-    @Column
-    private Double weight;
+    @Column(precision = 19, scale = 4)
+    private BigDecimal weight;
 
     @Embedded
     private Dimension dimension;
