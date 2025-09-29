@@ -9,6 +9,7 @@ import ru.yandex.practicum.store.ProductCategory;
 import ru.yandex.practicum.store.ProductState;
 import ru.yandex.practicum.store.QuantityState;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -43,6 +44,6 @@ public class Product {
     @Column(name = "product_category")
     private ProductCategory productCategory;
 
-    @Column
-    private Double price;
+    @Column(precision = 19, scale = 4, nullable = false)
+    private BigDecimal price;
 }

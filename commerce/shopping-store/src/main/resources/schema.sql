@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS products (
     quantity_state VARCHAR(10) NOT NULL,
     product_state VARCHAR(10) NOT NULL,
     product_category VARCHAR(10) NOT NULL,
-    price DOUBLE PRECISION NOT NULL
+    price NUMERIC(19, 4) NOT NULL
 );
