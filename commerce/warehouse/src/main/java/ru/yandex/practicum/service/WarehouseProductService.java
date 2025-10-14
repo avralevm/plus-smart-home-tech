@@ -1,10 +1,10 @@
 package ru.yandex.practicum.service;
 
 import ru.yandex.practicum.cart.ShoppingCartDto;
-import ru.yandex.practicum.warehouse.AddProductToWarehouseRequest;
-import ru.yandex.practicum.warehouse.AddressDto;
-import ru.yandex.practicum.warehouse.BookedProductsDto;
-import ru.yandex.practicum.warehouse.NewProductInWarehouseRequest;
+import ru.yandex.practicum.warehouse.*;
+
+import java.util.Map;
+import java.util.UUID;
 
 public interface WarehouseProductService {
     void addProductInWarehouse(NewProductInWarehouseRequest request);
@@ -14,4 +14,10 @@ public interface WarehouseProductService {
     void addProductToWarehouse(AddProductToWarehouseRequest request);
 
     AddressDto getAddressWarehouse();
+
+    void shippedToDelivery(ShipperToDeliveryRequest request);
+
+    void returnProducts(Map<UUID, Long> products);
+
+    public BookedProductsDto assemblyProductsForOrder(AssemblyProductsForOrderRequest request);
 }

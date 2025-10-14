@@ -15,10 +15,7 @@ import static org.springframework.http.HttpStatus.*;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(
-            NotFoundException ex,
-            HttpServletRequest request) {
-
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(NOT_FOUND.value())
@@ -31,10 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DeactivateShoppingCart.class)
-    public ResponseEntity<ErrorResponse> handleDeactivateShoppingCart(
-            DeactivateShoppingCart ex,
-            HttpServletRequest request) {
-
+    public ResponseEntity<ErrorResponse> handleDeactivateShoppingCart(DeactivateShoppingCart ex, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(CONFLICT.value())
@@ -47,10 +41,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoProductsInShoppingCartException.class)
-    public ResponseEntity<ErrorResponse> handleNoProductsInShoppingCart(
-            NoProductsInShoppingCartException ex,
-            HttpServletRequest request) {
-
+    public ResponseEntity<ErrorResponse> handleNoProductsInShoppingCart(NoProductsInShoppingCartException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(BAD_REQUEST.value())
@@ -63,9 +54,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotAuthorizedUserException.class)
-    public ResponseEntity<ErrorResponse> handleNotAuthorizedUser(
-            NotAuthorizedUserException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleNotAuthorizedUser(NotAuthorizedUserException ex, HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
@@ -79,10 +68,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(
-            Exception ex,
-            HttpServletRequest request) {
-
+    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, HttpServletRequest request) {
         StringWriter sw = new StringWriter();
         ex.printStackTrace(new PrintWriter(sw));
         String fullStackTrace = sw.toString();

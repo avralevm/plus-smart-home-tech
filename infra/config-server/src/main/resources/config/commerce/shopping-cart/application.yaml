@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:8432/shopping_cart
+    url: jdbc:postgresql://localhost:5434/shopping_cart
     username: shopping_cart
     password: 12345
     driver-class-name: org.postgresql.Driver
