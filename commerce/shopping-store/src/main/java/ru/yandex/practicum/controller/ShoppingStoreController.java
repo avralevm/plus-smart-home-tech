@@ -1,5 +1,6 @@
 package ru.yandex.practicum.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import ru.yandex.practicum.service.ShoppingStoreService;
 import ru.yandex.practicum.store.ProductDto;
 import ru.yandex.practicum.store.SetProductQuantityStateRequest;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -34,13 +36,13 @@ public class ShoppingStoreController implements ShoppingStoreFeignClient {
     }
 
     @PutMapping
-    public ProductDto createProduct(@RequestBody ProductDto productDto) {
+    public ProductDto createProduct(@Valid @RequestBody ProductDto productDto) {
         log.info("[PUT] Создание нового товара: {}", productDto);
         return service.createProduct(productDto);
     }
 
     @PostMapping
-    public ProductDto updateProduct(@RequestBody ProductDto productDto) {
+    public ProductDto updateProduct(@Valid @RequestBody ProductDto productDto) {
         log.info("[POST] Обновление товара в ассортименте: {}", productDto);
         return service.updateProduct(productDto);
     }
@@ -52,8 +54,14 @@ public class ShoppingStoreController implements ShoppingStoreFeignClient {
     }
 
     @PostMapping("/quantityState")
-    public boolean setProductQuantityState(SetProductQuantityStateRequest request) {
+    public boolean setProductQuantityState(@Valid SetProductQuantityStateRequest request) {
         log.info("[POST] Установка статуса по товару c id: {}, статус: {}", request.getProductId(), request.getQuantityState());
         return service.setProductQuantityState(request.getProductId(), request.getQuantityState());
+    }
+
+    @GetMapping("/by-ids")
+    public List<ProductDto> getProductsByIds(@RequestBody List<UUID> uuids) {
+        log.info("[GET] Получение списка товаров по списку ids: {}", uuids);
+        return service.getProductsByIds(uuids);
     }
 }

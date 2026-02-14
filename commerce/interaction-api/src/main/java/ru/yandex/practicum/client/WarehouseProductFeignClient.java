@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.cart.ShoppingCartDto;
-import ru.yandex.practicum.warehouse.AddProductToWarehouseRequest;
-import ru.yandex.practicum.warehouse.AddressDto;
-import ru.yandex.practicum.warehouse.BookedProductsDto;
-import ru.yandex.practicum.warehouse.NewProductInWarehouseRequest;
+import ru.yandex.practicum.warehouse.*;
+
+import java.util.Map;
+import java.util.UUID;
 
 @FeignClient(name = "warehouse", path = "/api/v1/warehouse", fallbackFactory = WarehouseFeignClientFallback.class)
 public interface WarehouseProductFeignClient {
@@ -21,8 +21,17 @@ public interface WarehouseProductFeignClient {
     BookedProductsDto checkProductQuantityEnoughForShoppingCart(@Valid @RequestBody ShoppingCartDto shoppingCartDto);
 
     @PostMapping("/add")
-    void AddProductToWarehouse(@RequestBody AddProductToWarehouseRequest request);
+    void AddProductToWarehouse(@RequestBody @Valid AddProductToWarehouseRequest request);
 
-    @GetMapping("address")
+    @GetMapping("/address")
     AddressDto getAddressWarehouse();
+
+    @PostMapping("/shipped")
+    void shippedToDelivery(@RequestBody @Valid ShipperToDeliveryRequest request);
+
+    @PostMapping("/return")
+    void returnProducts(@RequestBody Map<UUID, Long> products);
+
+    @PostMapping("/assembly")
+    BookedProductsDto assemblyProductsForOrder(@RequestBody @Valid AssemblyProductsForOrderRequest request);
 }

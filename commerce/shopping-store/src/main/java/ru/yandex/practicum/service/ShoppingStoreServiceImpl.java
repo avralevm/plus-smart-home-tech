@@ -15,6 +15,7 @@ import ru.yandex.practicum.store.QuantityState;
 import ru.yandex.practicum.repository.ShoppingStoreRepository;
 import ru.yandex.practicum.store.ProductDto;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -70,6 +71,14 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
         product.setQuantityState(state);
         repository.save(product);
         return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductDto> getProductsByIds(List<UUID> uuids) {
+        return repository.findAllByProductIdIn(uuids).stream()
+                .map(mapper::toProductDto)
+                .toList();
     }
 
     private Product findProductOrThrow(UUID productId) {

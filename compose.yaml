@@ -41,7 +41,7 @@ services:
       POSTGRES_USER: analyzer
       POSTGRES_PASSWORD: 12345
     ports:
-      - "6432:5432"
+      - "5432:5432"
 
   store-db:
     image: postgres:16.1
@@ -50,7 +50,7 @@ services:
       POSTGRES_USER: shopping_store
       POSTGRES_PASSWORD: 12345
     ports:
-      - "7432:5432"
+      - "5433:5432"
 
   cart-db:
     image: postgres:16.1
@@ -59,7 +59,7 @@ services:
       POSTGRES_USER: shopping_cart
       POSTGRES_PASSWORD: 12345
     ports:
-      - "8432:5432"
+      - "5434:5432"
 
   warehouse-db:
     image: postgres:16.1
@@ -68,4 +68,31 @@ services:
       POSTGRES_USER: warehouse
       POSTGRES_PASSWORD: 12345
     ports:
-      - "9432:5432"
+      - "5435:5432"
+
+  order-db:
+    image: postgres:16.1
+    environment:
+      POSTGRES_DB: order
+      POSTGRES_USER: order
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5436:5432"
+
+  payment-db:
+    image: postgres:16.1
+    environment:
+      POSTGRES_DB: payment
+      POSTGRES_USER: payment
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5437:5432"
+
+  delivery-db:
+    image: postgres:16.1
+    environment:
+      POSTGRES_DB: delivery
+      POSTGRES_USER: delivery
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5438:5432"
